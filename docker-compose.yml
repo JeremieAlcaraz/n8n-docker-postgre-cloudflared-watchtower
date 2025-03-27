@@ -1,0 +1,40 @@
+services:
+  n8n-db:
+    image: postgres:16-alpine
+    container_name: n8n-db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - n8n_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: always
+    depends_on:
+      n8n-db:
+        condition: service_healthy
+    env_file:
+      - .env
+    # Au lieu de monter un dossier hôte, tu montes un volume Docker
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    env_file:
+      - .env
+
+# Déclaration des volumes nommés
+volumes:
+  n8n_data:
+  n8n_db_data:
