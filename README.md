@@ -62,7 +62,7 @@ git clone https://github.com/JeremieAlcaraz/n8n-cloudflared-install-multipass.gi
 - `SUBDOMAIN` : Sous-domaine choisi (par exemple : `n8n`)
 - `DOMAIN` : Votre nom de domaine enregistré sur Cloudflare
 
-### 6. Lancement de l'installation
+### 6. Lancement de l'application
 
 Une fois le fichier .env ready, lancer la stack n8n avec la commande : 
 
