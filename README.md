@@ -47,6 +47,8 @@ git clone https://github.com/JeremieAlcaraz/n8n-cloudflared-install-multipass.gi
 4. Nommez le tunnel (par exemple : `n8n_app_prod`)
 5. Sélectionnez Docker
 6. Copiez la commande et extrayez uniquement le token
+7. Rentrer les infos suivantes ![10109](https://github.com/user-attachments/assets/25416f3a-1dfd-45b8-bfeb-3e6a77d8aa7a)
+
 
 #### 5.2 Remplissage du fichier .env
 
@@ -72,6 +74,3 @@ git clone https://github.com/JeremieAlcaraz/n8n-cloudflared-install-multipass.gi
 - [Documentation Cloudflare](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)
 - [Documentation n8n](https://docs.n8n.io/)
 
-## Licence
-
-(À compléter avec les informations de licence appropriées)
