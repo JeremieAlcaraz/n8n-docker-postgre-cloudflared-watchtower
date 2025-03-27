@@ -2,6 +2,8 @@
 # n8n-cloudflared-install-multipass
 Set up an automated development environment using Multipass and Docker. This project includes instructions to create a Multipass instance and a Docker Compose setup to run n8n with PostgreSQL and a Cloudflare Tunnel for publicd secure remote access.
 
+---
+
 # Installation de n8n avec Multipass et Cloudflared
 
 ## Prérequis
@@ -47,7 +49,9 @@ git clone https://github.com/JeremieAlcaraz/n8n-cloudflared-install-multipass.gi
 4. Nommez le tunnel (par exemple : `n8n_app_prod`)
 5. Sélectionnez Docker
 6. Copiez la commande et extrayez uniquement le token
-7. Rentrer les infos suivantes ![10109](https://github.com/user-attachments/assets/25416f3a-1dfd-45b8-bfeb-3e6a77d8aa7a)
+7. Rentrer les infos suivantes en adaptant votre nom de domaine (puis enregistrer)
+
+   ![10109](https://github.com/user-attachments/assets/25416f3a-1dfd-45b8-bfeb-3e6a77d8aa7a)
 
 
 #### 5.2 Remplissage du fichier .env
@@ -60,7 +64,13 @@ git clone https://github.com/JeremieAlcaraz/n8n-cloudflared-install-multipass.gi
 
 ### 6. Lancement de l'installation
 
-(Les étapes suivantes seront à ajouter en fonction du script d'installation)
+Une fois le fichier .env ready, lancer la stack n8n avec la commande : 
+
+```bash
+docker compose up -d
+```
+
+
 
 ## Dépannage
 
