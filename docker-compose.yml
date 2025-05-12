@@ -13,9 +13,13 @@ services:
     volumes:
       - n8n_db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
-      interval: 5s
+      # ⚠️  string unique → variables $POSTGRES_USER et $POSTGRES_DB
+      #     sont évaluées par le shell
+      # ✅ On teste juste « le serveur répond‑il ? »
+      test: "pg_isready -q"
+      interval: 10s
       timeout: 5s
+      start_period: 10s
       retries: 10
 
   # ==============================================
