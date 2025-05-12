@@ -1,4 +1,9 @@
 services:
+  # ==============================================
+  # Service: n8n-db
+  # PostgreSQL 16 Alpine for n8n
+  # Persists data via Docker volume
+  # ==============================================
   n8n-db:
     image: postgres:16-alpine
     container_name: n8n-db
@@ -13,6 +18,11 @@ services:
       timeout: 5s
       retries: 10
 
+  # ==============================================
+  # Service: n8n
+  # Principal d'exécution des workflows n8n
+  # Monte un volume pour la configuration et les données
+  # ==============================================
   n8n:
     image: n8nio/n8n:latest
     container_name: n8n
@@ -22,10 +32,14 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    # Au lieu de monter un dossier hôte, tu montes un volume Docker
     volumes:
       - n8n_data:/home/node/.n8n
 
+  # ==============================================
+  # Service: cloudflared
+  # Tunnel Cloudflare pour exposer n8n en HTTPS
+  # Gère automatiquement le tunnel configuré
+  # ==============================================
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
@@ -34,7 +48,19 @@ services:
     env_file:
       - .env
 
-# Déclaration des volumes nommés
+  # ==============================================
+  # Service: watchtower
+  # Mise à jour automatique des conteneurs Docker
+  # Vérifie et nettoie les images obsolètes toutes les 5 minutes
+  # ==============================================
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --cleanup --interval 300
+
 volumes:
   n8n_data:
   n8n_db_data:
