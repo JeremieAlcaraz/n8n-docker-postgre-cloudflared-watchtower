@@ -1,0 +1,42 @@
+# === Environnements ===
+# Ignore le vrai .env, mais laisse passer .env.example
+.env
+!.env.example
+
+# === Systèmes d'exploitation ===
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+
+# === IDE / éditeurs ===
+# Visual Studio Code
+.vscode/
+# JetBrains (WebStorm, IntelliJ…)
+.idea/
+
+# === Logs et bases de données ===
+logs/
+*.log
+*.sql
+*.sqlite
+
+# === Fichiers temporaires ===
+# fichiers temporaires classiques
+tmp/
+*.tmp
+*.swp
+*~
+
+# === Node.js (si applicable) ===
+node_modules/
+
+# === Docker ===
+# override locaux
+docker-compose.override.yml
+
+# === Autres ===
+# Process ID files
+*.pid
+# Dump files
+*.seed
