@@ -1,0 +1,11 @@
+{
+  // Liste d’extensions recommandées pour ce workspace
+  "recommendations": [
+    "esbenp.prettier-vscode",       // Prettier pour formater YAML, JSON…
+    "redhat.vscode-yaml",           // IntelliSense & validation YAML
+    "ms-python.python",             // Support Python (linting, formatting Black…)
+    "ms-azuretools.vscode-docker",  // Explorer Docker & IntelliSense compose
+    "exiasr.hadolint",              // Linter Dockerfile
+    "foxundermoon.shell-format"     // Formattage automatique des scripts Bash
+  ]
+}

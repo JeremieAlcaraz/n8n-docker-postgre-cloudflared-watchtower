@@ -1,0 +1,34 @@
+{
+  // ⏱ Formater automatiquement à la sauvegarde
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveTimeout": 2000,
+
+  // 🔗 Lier le JSON-Schema officiel Compose Spec à tes compose-files
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": [
+      "docker-compose.yml",
+      "docker-compose.*.yml"
+    ]
+  },
+
+  // 🔍 Réactiver la validation YAML par schéma
+  "yaml.validate": true,
+
+  // 🛠 Formatters par défaut
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker",
+    "editor.formatOnSave": true
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "editor.formatOnSave": true
+  }
+}

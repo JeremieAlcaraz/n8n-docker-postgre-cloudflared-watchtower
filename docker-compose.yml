@@ -16,7 +16,7 @@ services:
       # ⚠️  string unique → variables $POSTGRES_USER et $POSTGRES_DB
       #     sont évaluées par le shell
       # ✅ On teste juste « le serveur répond‑il ? »
-      test: "pg_isready -q"
+      test: 'pg_isready -q'
       interval: 10s
       timeout: 5s
       start_period: 10s
@@ -27,8 +27,12 @@ services:
   # Principal d'exécution des workflows n8n
   # Monte un volume pour la configuration et les données
   # ==============================================
-  n8n:
-    image: n8nio/n8n:latest
+  n8n: # ─── Remplacer le pull de l’image officielle par un build ───
+    # ─── Remplacer le pull de l’image officielle par un build ───
+    build:
+      context: ./images/n8n-custom-image
+      dockerfile: Dockerfile
+    image: n8n-python-firecrawl # Placez ceci au niveau racine du service
     container_name: n8n
     restart: always
     depends_on:
@@ -38,6 +42,7 @@ services:
       - .env
     volumes:
       - n8n_data:/home/node/.n8n
+      - ./scripts/firecrawl:/home/node/scripts/firecrawl # ← monte votre dossier de scripts Python (ex : firecrawl_script.py)
 
   # ==============================================
   # Service: cloudflared

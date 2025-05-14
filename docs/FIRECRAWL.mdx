@@ -1,0 +1,122 @@
+Voici comment ajouter Firecrawl à un **stack Docker Compose** existant :
+
+---
+
+## 1. Créer le `Dockerfile` pour n8n
+
+Placez ce fichier à la racine de votre projet (à côté de `docker-compose.yml`), par exemple dans un dossier `n8n-python/` :
+
+```dockerfile
+# n8n-custom-image/Dockerfile
+FROM n8nio/n8n:latest
+
+USER root
+RUN apt-get update \
+ && apt-get install -y python3 python3-pip \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install firecrawl pydantic
+
+USER node
+```
+
+---
+
+## 2. Modifier votre `docker-compose.yml`
+
+Remplacez (ou ajustez) le service `n8n` existant pour qu’il **build** depuis ce Dockerfile :
+
+```yaml
+
+services:
+  traefik:
+    # ... votre config Traefik , cloudflared ou autre pour la gestion du reverse proxy / tunnel...
+
+  postgresql:
+    image: postgres:14
+    # ... volumes, env, etc. ...
+
+  n8n:
+    build:
+      context: ./images/n8n-custom-image      # chemin vers le dossier contenant le Dockerfile
+      dockerfile: Dockerfile
+    image: n8n-python-firecrawl  # tag local
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgresql
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${DB_DATABASE}
+      - DB_POSTGRESDB_USER=${DB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD}
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
+    volumes:
+      - ~/.n8n:/home/node/.n8n
+      - ./n8n-python/scripts:/home/node/scripts
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=Host(`n8n.votre-domaine.com`)"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+    depends_on:
+      - postgresql
+
+  watchtower:
+    image: containrrr/watchtower
+    # ... votre config watchtower ...
+```
+
+Quelques points clés :
+
+* **`build.context`** et **`dockerfile`** pointent vers votre `n8n-python/Dockerfile`.
+* On monte `./n8n-python/scripts` dans le container pour y déposer vos scripts Python (`firecrawl_script.py`).
+* La variable d’environnement `FIRECRAWL_API_KEY` est injectée via `.env`.
+* Les labels Traefik (host, port) restent inchangés, c’est lui qui expose n8n sur votre domaine.
+
+---
+
+## 3. Placer votre script Python
+
+Dans `n8n-python/scripts/firecrawl_script.py` (exemple déjà fourni précédemment) :
+
+```bash
+mkdir -p n8n-python/scripts
+# puis copiez-y votre firecrawl_script.py
+```
+
+Veillez à rendre le script exécutable (si nécessaire) :
+
+```bash
+chmod +x n8n-python/scripts/firecrawl_script.py
+```
+
+---
+
+## 4. (Re)lancer le stack
+
+```bash
+docker-compose build n8n
+docker-compose up -d
+```
+
+* **`docker-compose build n8n`** forcera la reconstruction de l’image avec Python + vos librairies
+* **`up -d`** redémarrera n8n (et les autres services) en arrière-plan
+
+---
+
+## 5. Mettre à jour votre workflow n8n
+
+Dans l’UI n8n, utilisez un nœud **Execute Command** :
+
+* **Command**
+
+  ```bash
+  python3 /home/node/scripts/firecrawl_script.py {{$json["url"]}} {{$env.FIRECRAWL_API_KEY}}
+  ```
+* Puis un **Set** pour parser la sortie JSON de `stdout`.
+
+---
+
+✅ Vous voilà avec un n8n dans Docker Compose, enrichi de Python, Firecrawl & Pydantic, prêt à analyser vos URLs ! N’hésitez pas si vous voulez un extrait de `firecrawl_script.py` complet ou un modèle de workflow n8n.

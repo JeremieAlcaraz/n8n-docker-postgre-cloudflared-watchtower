@@ -11,7 +11,7 @@ Thumbs.db
 
 # === IDE / éditeurs ===
 # Visual Studio Code
-.vscode/
+#.vscode/
 # JetBrains (WebStorm, IntelliJ…)
 .idea/
 

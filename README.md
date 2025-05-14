@@ -16,21 +16,23 @@ Ce projet permet de créer une instance n8n de chez soi via un tunnel SSH (cloud
 
 Téléchargez et installez Multipass depuis le site officiel : [https://canonical.com/multipass](https://canonical.com/multipass)
 
-### 2. Création de l'instance Ubuntu avec Docker
+### 2. Création et connextion à l'instance Ubuntu avec Docker
 
 Ouvrez le terminal de votre machine hôte et exécutez la commande suivante :
 
 ```bash
-multipass launch docker --name n8n_multipass --cpus 4 --memory 8G --disk 50G
+multipass launch docker \
+  --name <instance_name> \
+  --cpus 2 \
+  --memory 4G \
+  --disk 50G \
+  --bridged
+
+multipass shell <instance_name>
 ```
 
-### 3. Connexion à l'instance Multipass
 
-```bash
-multipass shell n8n_multipass
-```
-
-### 4. Clonage du repository
+### 3. Clonage du repository
 
 Une fois connecté à l'instance, clonez le repository :
 
@@ -38,9 +40,9 @@ Une fois connecté à l'instance, clonez le repository :
 git clone https://github.com/JeremieAlcaraz/n8n-cloudflared-install-multipass.git
 ```
 
-### 5. Configuration du fichier .env
+### 4. Configuration du fichier .env
 
-#### 5.1 Démarrer le script d'initialisation
+#### 4.1 Démarrer le script d'initialisation
 
 Se placer dans le dossier 
 
@@ -54,13 +56,13 @@ Rendre le script exécutable
 chmod +x init.sh
 ```
 
-Exécuter le script d'initialisation 
+Exécuter le script de démarrage 
 
 ```bash
-./init.sh
+./bootstrap.sh
 ```
 
-#### 5.2 Création du tunnel Cloudflared
+#### 4.2 Création du tunnel Cloudflared
 
 1. Connectez-vous à [https://one.dash.cloudflare.com](https://one.dash.cloudflare.com)
 2. Naviguez dans le menu latéral vers "Network"
