@@ -1,0 +1,6 @@
+ingress:
+- hostname: n8n.${DOMAIN}
+  service: http://n8n:${N8N_PORT}
+- hostname: guacamole.${DOMAIN}
+  service: http://guacamole:8080
+- service: http_status:404
