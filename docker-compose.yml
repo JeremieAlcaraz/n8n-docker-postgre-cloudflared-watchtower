@@ -21,6 +21,8 @@ services:
       timeout: 5s
       start_period: 10s
       retries: 10
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
 
   # ==============================================
   # Service: n8n
@@ -38,7 +40,8 @@ services:
       - .env
     volumes:
       - n8n_data:/home/node/.n8n
-
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
   # ==============================================
   # Service: cloudflared
   # Tunnel Cloudflare pour exposer n8n en HTTPS
@@ -51,6 +54,10 @@ services:
     command: tunnel --no-autoupdate run
     env_file:
       - .env
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"  # ⬅️ Explicitement exclus
+    volumes:
+      - cloudflared_config:/home/nonroot/.cloudflared  # ⬅️ Persist config si nécessaire
 
   # ==============================================
   # Service: watchtower
@@ -63,7 +70,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --cleanup --interval 300
+    command: --cleanup --schedule "0 3 */2 * *" --label-enable
 
 volumes:
   n8n_data:
