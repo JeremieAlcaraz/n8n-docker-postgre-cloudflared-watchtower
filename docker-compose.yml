@@ -75,3 +75,5 @@ services:
 volumes:
   n8n_data:
   n8n_db_data:
+  cloudflared_config:  # ← Ajoutez cette ligne
+
